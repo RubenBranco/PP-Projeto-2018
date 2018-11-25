@@ -1,9 +1,14 @@
 -- RGB (Red Green Blue)
 module Pixmap
 ( Image
-,
-
+, fromFileContents
+, flipVertical
+, flipHorizontal
+, redFilter
+, greenFilter
+, blueFilter
 )
+
 where
 data Image = Pixel Int Int Int | P3 Int Int Int [[Image]]
 
@@ -23,3 +28,11 @@ flipVertical (P3 h w maxV pixels) = P3 h w maxV (reverse pixels)
 flipHorizontal :: Image -> Image
 flipHorizontal (P3 h w maxV pixels) = P3 h w maxV (map (reverse) pixels)
 
+redFilter :: Image -> Image
+redFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(r, _, _) -> Pixel r 0 0) x) pixels)
+
+greenFilter :: Image -> Image
+greenFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(_, g, _) -> Pixel 0 g 0) x) pixels)
+
+blueFilter :: Image -> Image
+blueFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(_, _, b) -> Pixel 0 0 b) x) pixels)
