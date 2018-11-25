@@ -29,10 +29,10 @@ flipHorizontal :: Image -> Image
 flipHorizontal (P3 h w maxV pixels) = P3 h w maxV (map (reverse) pixels)
 
 redFilter :: Image -> Image
-redFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(r, _, _) -> Pixel r 0 0) x) pixels)
+redFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(Pixel r _ _) -> Pixel r 0 0) x) pixels)
 
 greenFilter :: Image -> Image
-greenFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(_, g, _) -> Pixel 0 g 0) x) pixels)
+greenFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(Pixel _ g _) -> Pixel 0 g 0) x) pixels)
 
 blueFilter :: Image -> Image
-blueFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(_, _, b) -> Pixel 0 0 b) x) pixels)
+blueFilter (P3 h w maxV pixels) = P3 h w maxV (map (\x -> map (\(Pixel _ _ b) -> Pixel 0 0 b) x) pixels)
