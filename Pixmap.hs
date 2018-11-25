@@ -9,6 +9,7 @@ module Pixmap
 , blueFilter
 , halveHeight
 , halveWidth
+, grayscaleFilter
 )
 
 where
@@ -39,6 +40,12 @@ greenFilter (P3 h w maxV pixels) = P3 h w maxV $ map (\x -> map (\(Pixel _ g _) 
 
 blueFilter :: Image -> Image
 blueFilter (P3 h w maxV pixels) = P3 h w maxV $ map (\x -> map (\(Pixel _ _ b) -> Pixel 0 0 b) x) pixels
+
+grayscaleFilter :: Image -> Image
+grayscaleFilter (P3 h w maxV pixels) = P3 h w maxV $ map (\x -> map (\(Pixel r g b) -> grayscale (Pixel r g b)) x) pixels
+
+grayscale :: Image -> Image
+grayscale (Pixel r g b) = Pixel avg avg avg where avg = (r + b + g) `div` 3
 
 halveHeight :: Image -> Image
 halveHeight (P3 h w maxV pixels) = P3 h w maxV $ transpose $ map (halvePixels) $ transpose pixels
