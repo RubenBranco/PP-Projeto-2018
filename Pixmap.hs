@@ -7,6 +7,8 @@ module Pixmap
 , redFilter
 , greenFilter
 , blueFilter
+, halveHeight
+, halveWidth
 )
 
 where
