@@ -10,6 +10,7 @@ module Pixmap
 , halveHeight
 , halveWidth
 , grayscaleFilter
+, split
 )
 
 where
@@ -18,7 +19,7 @@ data Image = Pixel Int Int Int | P3 Int Int Int [[Image]]
 
 instance Show Image where
     show (Pixel r g b) = show r ++ " " ++ show g ++ " " ++ show b
-    show (P3 h w maxV pixels) = show h ++ " " ++ show w ++ " " ++ show maxV ++ (foldl (\acc x -> acc ++ pixelRowShow x) "" pixels)
+    show (P3 h w maxV pixels) = show w ++ " " ++ show h ++ " " ++ show maxV ++ (foldl (\acc x -> acc ++ pixelRowShow x) "" pixels)
 
 pixelRowShow :: [Image] -> String
 pixelRowShow = foldl (\acc x -> acc ++ " " ++ show x) ""
@@ -48,10 +49,10 @@ grayscale :: Image -> Image
 grayscale (Pixel r g b) = Pixel avg avg avg where avg = (r + b + g) `div` 3
 
 halveHeight :: Image -> Image
-halveHeight (P3 h w maxV pixels) = P3 h w maxV $ transpose $ map (halvePixels) $ transpose pixels
+halveHeight (P3 h w maxV pixels) = P3 (h `div` 2) w maxV $ transpose $ map (halvePixels) $ transpose pixels
 
 halveWidth :: Image -> Image
-halveWidth (P3 h w maxV pixels) = P3 h w maxV $ map (halvePixels) pixels
+halveWidth (P3 h w maxV pixels) = P3 h (w `div` 2) maxV $ map (halvePixels) pixels
 
 halvePixels :: [Image] -> [Image]
 halvePixels pixels = map (averagePixels) $ splitInTwo 2 pixels
