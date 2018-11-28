@@ -13,9 +13,10 @@ import Pixmap
 import Data.String
 import Data.List
 
-data Flag = FV | HW | HH | GS | RC | GC | BC
+data Flag = FH | FV | HW | HH | GS | RC | GC | BC
 
 flagSingleton :: String -> Flag
+flagSingleton "fh" = FH
 flagSingleton "fv" = FV
 flagSingleton "hw" = HW
 flagSingleton "hh" = HH
@@ -25,6 +26,7 @@ flagSingleton "gc" = GC
 flagSingleton "bc" = BC
 
 operation :: Flag -> (Image -> Image)
+operation FH = flipHorizontal
 operation FV = flipVertical
 operation HW = halveWidth
 operation HH = halveHeight

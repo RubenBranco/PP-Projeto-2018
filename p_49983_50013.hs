@@ -13,5 +13,3 @@ main = do
     let newImage = foldl (\acc f -> (operation f) acc) image $ map (\(_:flag) -> flagSingleton flag) flags
     writeFile newImagePath $ unlines ["P3", show newImage]
     return ()
-
-
