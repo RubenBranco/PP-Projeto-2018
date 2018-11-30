@@ -3,6 +3,7 @@ import System.Environment
 import Parser
 import Pixmap
 
+main :: IO ()
 main = do
     (imagePath:newImagePath:flags) <- getArgs
     imageContents <- readFile imagePath
