@@ -11,6 +11,9 @@ module Pixmap
 , halveWidth
 , grayscaleFilter
 , split
+, numberOfPixels
+, getImageHeight
+, getImageWidth
 )
 
 where
@@ -20,6 +23,15 @@ data Image = Pixel Int Int Int | P3 Int Int Int [[Image]]
 instance Show Image where
     show (Pixel r g b) = show r ++ " " ++ show g ++ " " ++ show b
     show (P3 h w maxV pixels) = show w ++ " " ++ show h ++ " " ++ show maxV ++ (foldl (\acc x -> acc ++ pixelRowShow x) "" pixels)
+
+numberOfPixels :: Image -> Int
+numberOfPixels (P3 h w maxV pixels) = foldl (\acc x -> acc + (foldl (\acc y -> acc + 1) 0 x)) 0 pixels
+
+getImageHeight :: Image -> Int
+getImageHeight (P3 h _ _ _) = h
+
+getImageWidth :: Image -> Int
+getImageWidth (P3 _ w _ _) = w
 
 pixelRowShow :: [Image] -> String
 pixelRowShow = foldl (\acc x -> acc ++ " " ++ show x) ""
