@@ -67,17 +67,10 @@ halveWidth :: Image -> Image
 halveWidth (P3 h w maxV pixels) = P3 h (w `div` 2) maxV $ map (halvePixels) pixels
 
 halvePixels :: [Image] -> [Image]
-halvePixels pixels = map (averagePixels) $ splitInTwo 2 pixels
+halvePixels pixels = map (averagePixels) $ filter (\x -> (length x) == 2) $ split 2 pixels
 
 averagePixels :: [Image] -> Image
 averagePixels ((Pixel r1 g1 b1): (Pixel r2 g2 b2): _) = Pixel ((r1 + r2) `div` 2) ((g1 + g2) `div` 2) ((b1 + b2) `div` 2)
-averagePixels ((Pixel r g b): _) = Pixel r g b
-
-splitInTwo :: Int -> [a] -> [[a]]
-splitInTwo _ [] = []
-splitInTwo n xs
-        | odd $ length xs = split n (take ((length xs) `div` 2) xs) ++ [[xs !! (length xs `div` 2)]] ++ split n (drop ((length xs) `div` 2 + 1) xs)
-        | otherwise = split n xs
 
 split :: Int -> [a] -> [[a]]
 split _ [] = []
