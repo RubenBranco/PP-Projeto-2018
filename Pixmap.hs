@@ -18,11 +18,36 @@ module Pixmap
 
 where
 import Data.List
+import Control.Monad
+import Test.QuickCheck
 data Image = Pixel Int Int Int | P3 Int Int Int [[Image]]
 
 instance Show Image where
     show (Pixel r g b) = show r ++ " " ++ show g ++ " " ++ show b
     show (P3 h w maxV pixels) = show w ++ " " ++ show h ++ " " ++ show maxV ++ (foldl (\acc x -> acc ++ pixelRowShow x) "" pixels)
+
+instance Eq Image where
+    (Pixel r0 g0 b0) == (Pixel r1 g1 b1) = r0 == r1 && g0 == g1 && b0 == b1
+    (P3 h0 w0 maxV0 pixels0) == (P3 h1 w1 maxV1 pixels1) = h0 == h1 && w0 == w1 && maxV0 == maxV1 && pixels0 == pixels1
+    _ == _ = False
+
+instance Arbitrary Image where
+    arbitrary = do
+        h <- suchThat (arbitrary :: Gen Int) (>0)
+        w <- suchThat (arbitrary :: Gen Int) (>0)
+        maxV <- suchThat (arbitrary :: Gen Int) (\x -> x > 0 && x <= 255)
+        image <- randomImage h w maxV
+        return $ P3 h w maxV image
+
+randomImage :: Int -> Int -> Int -> Gen [[Image]]
+randomImage h w maxV = vectorOf h (vectorOf w (randomPixel maxV))
+
+randomPixel :: Int -> Gen Image
+randomPixel maxV = do
+        r <- choose (0, maxV) :: Gen Int
+        g <- choose (0, maxV) :: Gen Int
+        b <- choose (0, maxV) :: Gen Int
+        return $ Pixel r g b
 
 numberOfPixels :: Image -> Int
 numberOfPixels (P3 h w maxV pixels) = foldl (\acc x -> acc + (foldl (\acc y -> acc + 1) 0 x)) 0 pixels
