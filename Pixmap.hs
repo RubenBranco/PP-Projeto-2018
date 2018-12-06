@@ -14,6 +14,11 @@ module Pixmap
 , numberOfPixels
 , getImageHeight
 , getImageWidth
+, getPixels
+, getMaxV
+, getRedLight
+, getGreenLight
+, getBlueLight
 )
 
 where
@@ -57,6 +62,21 @@ getImageHeight (P3 h _ _ _) = h
 
 getImageWidth :: Image -> Int
 getImageWidth (P3 _ w _ _) = w
+
+getPixels :: Image -> [[Image]]
+getPixels (P3 _ _ _ pixels) = pixels
+
+getMaxV :: Image -> Int
+getMaxV (P3 _ _ maxV _) = maxV
+
+getRedLight :: Image -> Int
+getRedLight (Pixel r _ _) = r
+
+getGreenLight :: Image -> Int
+getGreenLight (Pixel _ g _) = g
+
+getBlueLight :: Image -> Int
+getBlueLight (Pixel _ _ b) = b
 
 pixelRowShow :: [Image] -> String
 pixelRowShow = foldl (\acc x -> acc ++ " " ++ show x) ""

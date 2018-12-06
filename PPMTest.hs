@@ -2,6 +2,7 @@ module PPMTest
 ( prop_image_invert_horizontal
 , prop_pixel_dimension
 , prop_ratio_upon_reduction
+, prop_max_pixel_value
 )
 
 where
@@ -17,3 +18,8 @@ prop_pixel_dimension img = (getImageHeight img) * (getImageWidth img) == numberO
 prop_ratio_upon_reduction :: Image -> Bool
 prop_ratio_upon_reduction img = getImageHeight img `div` getImageWidth img == getImageHeight reducedImg `div` getImageWidth reducedImg
                                 where reducedImg = halveWidth $ halveHeight img
+
+prop_max_pixel_value :: Image -> Bool
+prop_max_pixel_value img = length (filter (\x -> length (filter (\p -> (getRedLight p) > maxV || (getGreenLight p) > maxV || (getBlueLight p) > maxV) x) > 0) (getPixels img)) == 0
+                            where maxV = getMaxV img
+
