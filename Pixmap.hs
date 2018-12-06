@@ -38,8 +38,8 @@ instance Eq Image where
 
 instance Arbitrary Image where
     arbitrary = do
-        h <- suchThat (arbitrary :: Gen Int) (>0)
-        w <- suchThat (arbitrary :: Gen Int) (>0)
+        h <- suchThat (arbitrary :: Gen Int) (\x -> x > 0 && even x)
+        w <- suchThat (arbitrary :: Gen Int) (\x -> x > 0 && even x)
         maxV <- suchThat (arbitrary :: Gen Int) (\x -> x > 0 && x <= 255)
         image <- randomImage h w maxV
         return $ P3 h w maxV image
@@ -103,13 +103,15 @@ grayscaleFilter :: Image -> Image
 grayscaleFilter (P3 h w maxV pixels) = P3 h w maxV $ map (\x -> map (\(Pixel r g b) -> grayscale (Pixel r g b)) x) pixels
 
 grayscale :: Image -> Image
-grayscale (Pixel r g b) = Pixel avg avg avg where avg = (r + b + g) `div` 3
+grayscale (Pixel r g b) = Pixel avg avg avg where avg = (r + g + b) `div` 3
 
 halveHeight :: Image -> Image
-halveHeight (P3 h w maxV pixels) = P3 (h `div` 2) w maxV $ transpose $ map (halvePixels) $ transpose pixels
+halveHeight (P3 h w maxV pixels) = P3 (length newPixels) w maxV newPixels
+                                   where newPixels = transpose $ map (halvePixels) $ transpose pixels
 
 halveWidth :: Image -> Image
-halveWidth (P3 h w maxV pixels) = P3 h (w `div` 2) maxV $ map (halvePixels) pixels
+halveWidth (P3 h w maxV pixels) = P3 h (length $ head newPixels) maxV newPixels
+                                  where newPixels = map (halvePixels) pixels
 
 halvePixels :: [Image] -> [Image]
 halvePixels pixels = map (averagePixels) $ filter (\x -> (length x) == 2) $ split 2 pixels
