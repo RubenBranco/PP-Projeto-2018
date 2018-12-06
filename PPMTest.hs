@@ -3,6 +3,7 @@ module PPMTest
 , prop_pixel_dimension
 , prop_ratio_upon_reduction
 , prop_max_pixel_value
+, prop_image_invert_vertical
 )
 
 where
@@ -11,6 +12,9 @@ import Pixmap
 
 prop_image_invert_horizontal :: Image -> Bool
 prop_image_invert_horizontal img = flipHorizontal (flipHorizontal img) == img
+
+prop_image_invert_vertical :: Image -> Bool
+prop_image_invert_vertical img = flipVertical (flipVertical img) == img
 
 prop_pixel_dimension :: Image -> Bool
 prop_pixel_dimension img = (getImageHeight img) * (getImageWidth img) == numberOfPixels img
