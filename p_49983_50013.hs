@@ -17,6 +17,9 @@ run ["-t"] = do
         quickCheck prop_ratio_upon_reduction
         quickCheck prop_max_pixel_value
         quickCheck prop_image_invert_vertical
+        quickCheck prop_red_channel
+        quickCheck prop_green_channel
+        quickCheck prop_blue_channel
         return ()
 run (imagePath:newImagePath:flags) = do
                 imageContents <- readFile imagePath
